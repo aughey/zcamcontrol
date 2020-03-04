@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "servo": "nodemon --watch servo.js --exec babel-node servo.js --presets @babel/preset-env",
-    "server": "nodemon --watch servo.js --watch server --exec babel-node server.js --presets @babel/preset-env",
+    "camera": "nodemon --watch camera.js --exec babel-node camera.js --presets @babel/preset-env",
+    "server": "nodemon --watch servo.js --watch server.js --watch camera.js --exec babel-node server.js --presets @babel/preset-env",
     "command": "babel-node --presets @babel/preset-env -- command.js"
   },
   "author": "",
@@ -14,6 +15,7 @@
   "dependencies": {
     "@babel/core": "^7.8.6",
     "@babel/node": "^7.8.4",
+    "axios": "^0.19.2",
     "express": "^4.17.1",
     "nodemon": "^2.0.2",
     "rxjs": "^6.5.4",

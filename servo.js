@@ -81,7 +81,6 @@ const servoImp = {
       }
     },
     moveTimer: async () => {
-      console.log("MoveTimer")
       await asyncSleep(0.25)
     },
     doMove: async (context,event) => {
