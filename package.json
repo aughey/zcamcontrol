@@ -1,0 +1,26 @@
+{
+  "name": "zcamcontrol",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "servo": "nodemon --watch servo.js --exec babel-node servo.js --presets @babel/preset-env",
+    "server": "nodemon --watch servo.js --watch server --exec babel-node server.js --presets @babel/preset-env",
+    "command": "babel-node --presets @babel/preset-env -- command.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/core": "^7.8.6",
+    "@babel/node": "^7.8.4",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.2",
+    "rxjs": "^6.5.4",
+    "xstate": "^4.8.0"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.8.6",
+    "@babel/preset-es2015": "^7.0.0-beta.53"
+  }
+}
