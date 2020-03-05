@@ -81,7 +81,7 @@ const servoImp = {
       }
     },
     moveTimer: async () => {
-      await asyncSleep(0.25)
+      await asyncSleep(0.1)
     },
     doMove: async (context,event) => {
       let gpio = context.gpio;

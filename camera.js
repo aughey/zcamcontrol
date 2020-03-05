@@ -63,6 +63,21 @@ async function getParam(param) {
   return json
 }
 
+async function isRecording() {
+  var json = await sendCommand("/ctrl/mode?action=query")
+  return json.msg === 'rec_ing'
+}
+
+async function startRecord() {
+  var json = await sendCommand("/ctrl/rec?action=start")
+  return json;
+}
+
+async function stopRecord() {
+  var json = await sendCommand("/ctrl/rec?action=stop")
+  return json;
+}
+
 async function sendCommand(command) {
   var url = camera_url + command;
   console.log("Sending camera: " + url)
@@ -157,5 +172,8 @@ var cameraReady = cameraObservable.pipe(
 // => 'inactive'
 
 module.exports = {
-  ready: cameraReady
+  ready: cameraReady,
+  isRecording: isRecording,
+  startRecord: startRecord,
+  stopRecord: stopRecord
 }

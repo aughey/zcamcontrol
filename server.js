@@ -26,8 +26,9 @@ function self_proxy(url, res) {
           res.set(k, resp.headers[k])
         })
         //res.set('content-type', resp.headers['content-type'])
+        res.write(chunk)
+	resp.pipe(res);
       }
-      res.write(chunk)
     })
     resp.on('end', () => {
       console.log("source closed");
@@ -54,6 +55,15 @@ servo.ready.subscribe(s => {
   app.post("/direction/:dir", async (req,res) => {
     service.send(req.params.dir)
     res.send("OK")
+  });
+
+  app.post("/camera/record/:startstop", async (req,res) => {
+    var result = await (req.params.startstop === 'start' ? camera.startRecord() : camera.stopRecord())
+    res.json(result);
+  });
+
+  app.get("/camera/isRecording", async (req,res) => {
+    res.json(await camera.isRecording())
   });
 
   app.post("/camera/:dir", async (req,res) => {

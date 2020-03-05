@@ -8,7 +8,8 @@
     "servo": "nodemon --watch servo.js --exec babel-node servo.js --presets @babel/preset-env",
     "camera": "nodemon --watch camera.js --exec babel-node camera.js --presets @babel/preset-env",
     "server": "nodemon --watch servo.js --watch server.js --watch camera.js --exec babel-node server.js --presets @babel/preset-env",
-    "command": "babel-node --presets @babel/preset-env -- command.js"
+    "command": "babel-node --presets @babel/preset-env -- command.js",
+    "forever_start_server": "forever start server-wrapper.js"
   },
   "author": "",
   "license": "ISC",
@@ -17,6 +18,7 @@
     "@babel/node": "^7.8.4",
     "axios": "^0.19.2",
     "express": "^4.17.1",
+    "forever": "^2.0.0",
     "nodemon": "^2.0.2",
     "rxjs": "^6.5.4",
     "xstate": "^4.8.0"

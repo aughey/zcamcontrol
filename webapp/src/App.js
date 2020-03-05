@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState,useEffect } from 'react';
 import './App.css';
 import axios from 'axios'
 
@@ -15,8 +15,44 @@ function DirectionButton(props) {
   )
 }
 
+function RecordIndicator(props) {
+  var [recording,setRecording] = useState(false)
+  useEffect(() => {
+    var timer = null;
+    async function query() {
+      timer = null;
+      var recording = await axios.get("/camera/isRecording");
+      console.log(recording.data)
+      setRecording(recording.data)
+      timer = setTimeout(query,1000)
+    }
+    query()
+    return () => {
+      clearTimeout(timer);
+    }
+  },[]);
+
+  return (
+    <div className={recording ? "recording" : "notrecording"}>{recording ? "Recording" : "Not Recording"}</div>
+  )
+}
+
 function Stream(props) {
-  return (<img src="/stream" alt="stream"/>)
+  var [show,setShow] = useState(false)
+
+  var stream = null;
+  if(show) {
+    stream = (<img src="/stream" alt="stream"/>)
+  }
+
+  return (
+  <div>
+    <div>
+    Show stream: <input type="checkbox" onChange={_ => setShow(!show)} checked={show}/>
+    </div>
+    {stream}
+  </div>
+  )
   return null
 }
 
@@ -38,6 +74,12 @@ function App() {
  	<DirectionButton prefix="/camera" dir="focus"/>
  	<DirectionButton prefix="/camera" dir="focusin"/>
  	<DirectionButton prefix="/camera" dir="focusout"/>
+      </div>
+      <div>
+        Record:
+        <DirectionButton prefix="/camera/record/" dir="start"/>
+        <DirectionButton prefix="/camera/record/" dir="stop"/>
+        <RecordIndicator/>
       </div>
 	<Stream/>
     </div>

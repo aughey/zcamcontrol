@@ -36,3 +36,15 @@
     transform: rotate(360deg);
   }
 }
+
+.recording {
+  background-color: red
+}
+
+img {
+  max-width: 100%;
+}
+
+.notrecording {
+  background-color: blue
+}
