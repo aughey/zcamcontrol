@@ -61,6 +61,10 @@ function extractMultipart() {
                             console.log(header)
 
                             var contentlength = header.find(v => v.startsWith("Content-Length:"))
+                            if(!contentlength) {
+                                work_performed = true;
+                                continue
+                            }
                             var [_, len] = contentlength.split(' ');
                             datalen = parseInt(len, 10);
                             console.log(datalen)
