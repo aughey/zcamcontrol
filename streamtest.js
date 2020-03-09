@@ -1,9 +1,16 @@
 import { Observable, Subject, fromEvent } from 'rxjs';
 import { map, tap, publish, refCount, switchMap, take, finalize, buffer } from 'rxjs/operators';
 //import { Throttle } from 'stream-throttle'
-import { writeFileSync } from 'fs';
+import { writeFileSync, fstat, statSync } from 'fs';
 
-const ffroot = '/home/pi/ffmpeg-4.2.2-armhf-static'
+var ffroot = '/home/pi/ffmpeg-4.2.2-armhf-static'
+var ext = ''
+try {
+    statSync(ffroot)
+} catch {
+    ffroot = "/jha/ffmpeg-4.1.1-win64-static/bin"
+    ext = '.exe'
+}
 
 const { spawn } = require('child_process');
 const sharp = require('sharp')
@@ -41,8 +48,8 @@ function spawnRX(command, args) {
 // /c/jha/ffmpeg-4.2.1-win64-shared/bin/ffmpeg.exe -hide_banner -loglevel panic -fflags nobuffer -flags low_delay -i concat.mp4 -f rawvideo -vcodec rawvideo pipe:1 
 
 function ffmpegRx(path) {
-    const ffprobe = ffroot + '/ffprobe'
-    var ffmpeg_exe = ffroot + '/ffmpeg'
+    const ffprobe = ffroot + '/ffprobe' + ext
+    var ffmpeg_exe = ffroot + '/ffmpeg' + ext
     var ffmpeg_args = "-hide_banner -loglevel panic -fflags nobuffer -flags low_delay -f rawvideo -vcodec rawvideo -pix_fmt rgb24 pipe:1"
     ffmpeg_args = ffmpeg_args.split(' ');
     ffmpeg_args.push("-i");
