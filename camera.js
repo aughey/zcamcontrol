@@ -80,7 +80,7 @@ async function stopRecord() {
 
 async function sendCommand(command) {
   var url = camera_url + command;
-  console.log("Sending camera: " + url)
+  //console.log("Sending camera: " + url)
   var res = await axios.get(url)
   var data = await res.data;
   return data

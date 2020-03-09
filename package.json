@@ -21,6 +21,7 @@
     "forever": "^2.0.0",
     "nodemon": "^2.0.2",
     "rxjs": "^6.5.4",
+    "sharp": "^0.25.1",
     "xstate": "^4.8.0"
   },
   "devDependencies": {
