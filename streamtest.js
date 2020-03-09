@@ -65,48 +65,6 @@ function ffmpegRx(path) {
         ))
     )
 
-
-    // return new Observable(observer => {
-    //     console.log("Starting up ffmpeg on " + path)
-
-    //     var ffprobe = "c:/jha/ffmpeg-4.2.1-win64-shared/bin/ffprobe.exe"
-
-    //     var data = await pipeAll(ffprobe, ["-v", "quiet", "-print_format", "json", "-show_streams", path])
-    //     data = JSON.parse(data);
-    //     var video = data.streams.find(s => s.codec_type === 'video')
-
-    //     var width = video.width;
-    //     var height = video.height;
-
-    //     var args = "-hide_banner -loglevel panic -fflags nobuffer -flags low_delay -f rawvideo -vcodec rawvideo -pix_fmt rgb24 pipe:1"
-    //     args = args.split(' ');
-    //     args.push("-i");
-    //     args.push(path)
-
-    //     const prog = spawn(ffmpeg_exe, args)
-
-    //     prog.on('close', () => {
-    //         console.log("FFMPEG process exited")
-    //     })
-
-    //     observer.next({ stream: prog.stdout, width: width, height: height })
-    //     return () => {
-    //         console.log("shutting down ffmpeg for " + path)
-    //         setTimeout(() => {
-    //             prog.stdin.destroy();
-    //             prog.stdout.destroy();
-    //             prog.stderr.destroy()
-    //         }, 1000);
-    //     }
-    // }).pipe(
-    //     // map(obj => Object.assign(obj,{
-    //     //     stream: obj.stream.pipe(new Throttle({ rate: obj.width * obj.height * 3 * 20 }))
-    //     // })),
-    //     finalize(_ => console.log(" first finalize")),
-    //     switchMap(obj => rxCollectBufferSize(MyStreamToRX(obj.stream), obj.width * obj.height * 3, obj)),
-    //     finalize(_ => console.log(" second finalize"))
-    //     //tap(v => console.log(v))
-    // )
 }
 
 function MyStreamToRX(stream) {
@@ -138,6 +96,10 @@ framestream.pipe(
     writeFileSync("image.png", imagedata);
     console.log("Wrote image file");
 });
+
+framestream.subscribe(_ => {
+  console.log("Got frame")
+})
 
 // setTimeout(() => {
 //     console.log("Slow subscribe getting one buffer")
