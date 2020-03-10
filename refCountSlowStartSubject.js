@@ -1,4 +1,6 @@
 import { Observable, Subject } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+
 
 // Turns an observable that is slow to start into a referenced counted
 // subject

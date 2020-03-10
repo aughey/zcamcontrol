@@ -4,7 +4,9 @@ var express = require('express')
 var http = require('http')
 const { spawn } = require('child_process')
 import { mjpegStreamRx } from './mjpeg_stream';
-import { RefCountSlowStartSubject } from "./refCountSlowStartSubject"
+import { refCountSlowStartSubject } from "./refCountSlowStartSubject"
+import { take } from 'rxjs/operators';
+
 
 async function runCommand(command,args) {
   console.log(command + " " + args.join(' '))
@@ -78,7 +80,7 @@ servo.ready.subscribe(s => {
   });
 
   const url = "http://10.0.0.36/mjpeg_stream"
-  const jpegStream = RefCountSlowStartSubject(mjpegStreamRx(url),1000)
+  const jpegStream = refCountSlowStartSubject(mjpegStreamRx(url),30000)
 
   app.get("/snapshot", async (req,res) => {
     // avconv -loglevel quiet  -f MJPEG -y -i http://10.0.0.36/mjpeg_stream -vframes 1 -q:v 1 pipe:.jpg 
