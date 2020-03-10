@@ -3,6 +3,8 @@ var camera = require('./camera')
 var express = require('express')
 var http = require('http')
 const { spawn } = require('child_process')
+import { mjpegStreamRx } from './mjpeg_stream';
+import { RefCountSlowStartSubject } from "./refCountSlowStartSubject"
 
 async function runCommand(command,args) {
   console.log(command + " " + args.join(' '))
@@ -75,13 +77,17 @@ servo.ready.subscribe(s => {
     self_proxy("http://10.0.0.36/mjpeg_stream",res)
   });
 
+  const url = "http://10.0.0.36/mjpeg_stream"
+  const jpegStream = RefCountSlowStartSubject(mjpegStreamRx(url),1000)
+
   app.get("/snapshot", async (req,res) => {
     // avconv -loglevel quiet  -f MJPEG -y -i http://10.0.0.36/mjpeg_stream -vframes 1 -q:v 1 pipe:.jpg 
-    var data = await runCommand('avconv',
-       ['-loglevel','quiet','','-f','MJPEG','-y','-i','http://10.0.0.36/mjpeg_stream','-vframes','1','-q:v','1','pipe:.jpg'])
-    console.log(data)
-    res.type("jpeg")
-    res.send(data);
+    jpegStream.pipe(
+      take(1)
+    ).subscribe(data => {
+      res.type("jpeg")
+      res.send(data);  
+    })
   });
 
   app.listen(4000, () => {

@@ -2,6 +2,7 @@ import { Observable, Subject, fromEvent } from 'rxjs';
 import { map, tap, publish, refCount, switchMap, take, finalize, buffer } from 'rxjs/operators';
 //import { Throttle } from 'stream-throttle'
 import { writeFileSync, fstat, statSync } from 'fs';
+import { mjpegStreamRx } from './mjpeg_stream';
 
 var ffroot = '/home/pi/ffmpeg-4.2.2-armhf-static'
 var ext = ''
@@ -95,18 +96,16 @@ var url = process.argv[2]
 
 var framestream = RefCountSlowStartSubject(ffmpegRx(url), 1000);
 
+
+framestream = RefCountSlowStartSubject(mjpegStreamRx(url),1000)
+
 framestream.pipe(
     take(3)
 ).subscribe(async buf => {
-    var image = sharp(buf.data, { raw: { width: buf.width, height: buf.height, channels: 3 } })
-    var imagedata = await image.png().toBuffer();
-    writeFileSync("image.png", imagedata);
+    writeFileSync("image.jpg", buf);
     console.log("Wrote image file");
 });
 
-framestream.subscribe(_ => {
-  console.log("Got frame")
-})
 
 // setTimeout(() => {
 //     console.log("Slow subscribe getting one buffer")
@@ -115,47 +114,6 @@ framestream.subscribe(_ => {
 //     })
 // }, 3000)
 
-// Turns an observable that is slow to start into a referenced counted
-// subject
-function RefCountSlowStartSubject(observable, msdelay) {
-    var subject = new Subject();
-    var refcount = 0;
-    var sub = null;
-
-    var shutdownTimeout;
-
-    function deref() {
-        refcount--;
-        if (refcount === 0) {
-            console.log("refcount 0, shutting down");
-            shutdownTimeout = setTimeout(() => {
-                console.log("Actually shutting down");
-                sub.unsubscribe();
-                sub = null;
-                shutdownTimeout = null;
-            }, msdelay)
-        }
-    }
-
-    var myob = new Observable(ob => {
-        refcount++;
-        if (!sub) {
-            console.log("first subscribe, startting up")
-            sub = observable.subscribe(value => subject.next(value))
-        }
-        if (shutdownTimeout) {
-            console.log("Stopping shutdown")
-            clearTimeout(shutdownTimeout);
-            shutdownTimeout = null;
-        }
-        ob.next(null)
-        return deref
-    })
-
-    return myob.pipe(
-        switchMap(_ => subject)
-    )
-}
 
 function rxCollectBufferSize(stream, fixed_size, payload) {
     return new Observable(observer => {
