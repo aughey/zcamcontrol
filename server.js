@@ -75,9 +75,9 @@ servo.ready.subscribe(s => {
     res.send("OK")
   });
 
-  app.get("/stream", (req,res) => {
-    self_proxy("http://10.0.0.36/mjpeg_stream",res)
-  });
+  // app.get("/stream", (req,res) => {
+  //   self_proxy("http://10.0.0.36/mjpeg_stream",res)
+  // });
 
   const url = "http://10.0.0.36/mjpeg_stream"
   const jpegStream = refCountSlowStartSubject(mjpegStreamRx(url),30000)
