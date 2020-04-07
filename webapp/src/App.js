@@ -15,6 +15,31 @@ function DirectionButton(props) {
   )
 }
 
+function DropDownParam(props) {
+  var options = props.options.map(o => (<option key={o} value={o}>{o}</option>))
+  options.unshift((<option key={"foo"} value='zzz'>unset</option>))
+
+  function change(e) {
+    var v = e.target.value;
+    if(v === 'zzz') {
+      return;
+    }
+    sendCommand("/camera","setkey/" + props.param + "/" + v)
+  }
+  
+  return (<select onChange={change}>{options}</select>)
+}
+
+function AudioGain(props) {
+  var [value,setValue] = useState(-24);
+
+  useEffect(() => {
+    axios.post("/camera/set/audio_gain/" + value)
+  },[value]);
+
+  return (<div>Audio Gain<input type='range' min={-24} max={6} value={value} onChange={e => setValue(e.target.value)}/>{value}</div>)
+}
+
 function useTimeout(callback,ms) {
   useEffect(() => {
 	  var timer = null;
@@ -170,7 +195,15 @@ function App() {
  	<DirectionButton prefix="/camera" dir="focusin"/>
  	<DirectionButton prefix="/camera" dir="focusout"/>
       </div>
+      <div>
 	<FocusIndicator/>
+      </div>
+  	<div>
+ISO: <DropDownParam param={'iso'} options={[800,1000,1250,1600,2000,2500,3200]}/>
+</div>
+      <div>
+	<AudioGain/>
+      </div>
       <div>
         Record:
         <DirectionButton prefix="/camera/record/" dir="start"/>

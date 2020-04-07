@@ -73,6 +73,17 @@ function setupCamera(app) {
     res.send("OK")
   });
 
+  app.post("/camera/setkey/:key/:value", async (req,res) => {
+console.log(req.params)
+    cameraservice.send('setKey',{ key: req.params.key, value: req.params.value})
+    res.send("OK")
+  });
+
+  app.post("/camera/set/:dir/:value", async (req,res) => {
+    cameraservice.send(req.params.dir,{value: req.params.value})
+    res.send("OK")
+  });
+
   // app.get("/stream", (req,res) => {
   //   self_proxy("http://10.0.0.36/mjpeg_stream",res)
   // });

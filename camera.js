@@ -34,16 +34,20 @@ const cameraStates = {
 	narrowzoom: 'narrowzoom',
 	format: 'format',
 	focus: 'focus',
+	setKey: 'setKey',
+	audio_gain: 'audio_gain',
 	focusin: 'focusin',
 	focusout: 'focusout'
 }
 	},
+    setKey: invokeCommand('setKey'),
     focus: invokeCommand('focus'),
     focusin: invokeCommand('focusin'),
     focusout: invokeCommand('focusout'),
     narrowzoom: invokeCommand('narrowzoom'),
     halfzoom: invokeCommand('halfzoom'),
     format: invokeCommand('format'),
+    audio_gain: invokeCommand('audio_gain'),
     widezoom: {
       invoke: {
         src: 'widezoom',
@@ -70,7 +74,7 @@ async function getParam(param) {
 }
 
 async function setParam(param,value) {
-  var json = await sendCommand("/ctrl/set?param" + "=" + value);
+  var json = await sendCommand("/ctrl/set?" + param + "=" + value);
   return json
 }
 
@@ -174,6 +178,14 @@ const cameraImp = {
     },
     focusout: async () => {
       return incrFocus(-0.01)
+    },
+    setKey: async (context,event) => {
+   console.log(event)
+        await setParam(event.key,event.value)
+    },
+    audio_gain: async (context,event) => {
+	console.log(event)
+        await setParam('audio_input_gain',event.value)
     },
     format: async () => {
       await sendCommand("/ctrl/card?action=format")
