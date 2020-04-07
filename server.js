@@ -48,26 +48,24 @@ function self_proxy(url, res) {
   })
 }
 
-
-servo.ready.subscribe(s => {
-  var app = express();
-  var service = s.service;
-  
+function setupCamera(app) {
   camera.ready.subscribe(c => {
     var cameraservice = c.service
-
-  app.post("/direction/:dir", async (req,res) => {
-    service.send(req.params.dir)
-    res.send("OK")
-  });
 
   app.post("/camera/record/:startstop", async (req,res) => {
     var result = await (req.params.startstop === 'start' ? camera.startRecord() : camera.stopRecord())
     res.json(result);
   });
 
+  app.get("/camera/getFocusPos", async (req,res) => {
+     var pos = await camera.getFocus()
+     res.json(pos)
+  })
+
   app.get("/camera/isRecording", async (req,res) => {
-    res.json(await camera.isRecording())
+    var rec = await camera.isRecording()
+    var storage = await camera.storage()
+    res.json({ isRecording: rec, storage: storage })
   });
 
   app.post("/camera/:dir", async (req,res) => {
@@ -92,9 +90,23 @@ servo.ready.subscribe(s => {
     })
   });
 
+})
+}
+
+servo.ready.subscribe(s => {
+  var app = express();
+  var service = s.service;
+
+  setupCamera(app)
+  console.log("Setting up express");
+
+  app.post("/direction/:dir", async (req,res) => {
+    service.send(req.params.dir)
+    res.send("OK")
+  });
+
   app.listen(4000, () => {
     console.log("Server listening...")
   });
-})
-
+  
 })

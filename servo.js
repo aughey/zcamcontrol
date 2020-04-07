@@ -100,10 +100,10 @@ const servoImp = {
 // Machine instance with internal state
 const initialContext = {
   gpio: {
-    right: 13,
-    left: 17,
-    up: 26,
-    down: 22
+    down: 13,
+    up: 17,
+    right: 26,
+    left: 22
   }
 };
 

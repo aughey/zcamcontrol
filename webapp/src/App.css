@@ -41,6 +41,10 @@
   background-color: red
 }
 
+.streamdiv:hover {
+  transform: scale(4,4)
+}
+
 img {
   max-width: 100%;
 }

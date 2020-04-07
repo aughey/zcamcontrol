@@ -14,7 +14,7 @@ export function refCountSlowStartSubject(observable, msdelay) {
     function deref() {
         refcount--;
         if (refcount === 0) {
-            console.log("refcount 0, shutting down");
+            //console.log("refcount 0, shutting down");
             shutdownTimeout = setTimeout(() => {
                 console.log("Actually shutting down");
                 sub.unsubscribe();
@@ -31,7 +31,6 @@ export function refCountSlowStartSubject(observable, msdelay) {
             sub = observable.subscribe(value => subject.next(value))
         }
         if (shutdownTimeout) {
-            console.log("Stopping shutdown")
             clearTimeout(shutdownTimeout);
             shutdownTimeout = null;
         }
